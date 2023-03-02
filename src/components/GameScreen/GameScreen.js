@@ -3,15 +3,14 @@ import './GameScreen.css';
 import Button from '../Button/Button';
 import Card from '../Card/Card';
 
-function GameScreen({onSubmit, getRandomCard, addScore, score }) {
+function GameScreen({ backToStart, getRandomCard, addScore, score }) {
     const [randomePokemon, setRandomePokemon] = useState({});
     const [variables, setVariables] = useState([]);
     const [isAnswered, setIsAnswered] = useState(false);
 
-
     useEffect(() => {
-        const currentCard = updateRandomCard(); 
-        getVariables(currentCard);      
+        const currentCard = updateRandomCard();
+        getVariables(currentCard);
     }, []);
 
     function getVariables(currentCard) {
@@ -25,12 +24,12 @@ function GameScreen({onSubmit, getRandomCard, addScore, score }) {
 
         arrayVariables.sort(function (a, b) {
             if (a._id > b._id) {
-              return 1;
+                return 1;
             }
             if (a._id < b._id) {
-              return -1;
+                return -1;
             }
-          });
+        });
 
         setVariables(arrayVariables);
     }
@@ -38,11 +37,11 @@ function GameScreen({onSubmit, getRandomCard, addScore, score }) {
     function updateRandomCard() {
         const randomCard = getRandomCard();
         randomCard.isRight = true;
-        setRandomePokemon(randomCard);  
+        setRandomePokemon(randomCard);
         return randomCard;
     }
 
-    function updateVariables(){
+    function updateVariables() {
         getVariables(updateRandomCard());
         setIsAnswered(false);
     }
@@ -50,37 +49,36 @@ function GameScreen({onSubmit, getRandomCard, addScore, score }) {
     function checkAnswer(elem) {
         setIsAnswered(true);
         if (elem) {
-            console.log(`right!!!!!`);
+            console.log(`yes`);
             addScore();
         } else {
-            console.log(`fuck!!!!!`);
-        } 
+            console.log(`no`);
+        }
     }
 
     function onChangeScreen() {
-        onSubmit(false);
+        backToStart();
     };
-    
 
     return (
         <>
             <p>Score: {score}</p>
-            <Card pokemonInfo={randomePokemon}/>
+            <Card pokemonInfo={randomePokemon} />
             <div>
-                { variables.map((elem, id) =>   
-                   <Button textContent={elem.name} key={elem._id+id} onSubmit={checkAnswer} isAnswered={isAnswered} isRight={elem.isRight || false}/>
+                {variables.map((elem, id) =>
+                    <Button textContent={elem.name} key={elem._id + id} onSubmit={checkAnswer} isAnswered={isAnswered} isRight={elem.isRight || false} />
                 )
                 }
             </div>
             <Button textContent={`Next!`}
-                    onSubmit={updateVariables}
-                    isAnswered={!isAnswered}
+                onSubmit={updateVariables}
+                isAnswered={!isAnswered}
             />
             <Button textContent={`Let's back...`}
-                    onSubmit={onChangeScreen}
+                onSubmit={onChangeScreen}
             />
         </>
-      );
+    );
 }
 
 export default GameScreen;
